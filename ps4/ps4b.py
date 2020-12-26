@@ -57,7 +57,7 @@ def get_story_string():
 
 ### END HELPER CODE ###
 
-WORDLIST_FILENAME = 'words.txt'
+WORDLIST_FILENAME = 'ps4-words.txt'
 
 class Message(object):
     def __init__(self, text):
@@ -132,7 +132,7 @@ class Message(object):
              down the alphabet by the input shift
         '''
         dictionary = Message.build_shift_dict(self, shift)
-        text = self.message_text
+        text = Message.get_message_text(self)
         result = ""
         letters = string.ascii_letters
         for i in text:
@@ -258,19 +258,34 @@ class CiphertextMessage(Message):
 
 if __name__ == '__main__':
 
-   #Example test case (PlaintextMessage)
-   plaintext = PlaintextMessage('hello', 2)
-   print('Expected Output: jgnnq')
-   print('Actual Output:', plaintext.get_message_text_encrypted())
-   #Example test case (CiphertextMessage)
-   ciphertext = CiphertextMessage('jgnnq')
-   print('Expected Output:', (24, 'hello'))
-   print('Actual Output:', ciphertext.decrypt_message())
+    #Example test case (PlaintextMessage)
+    plaintext = PlaintextMessage('hello', 2)
+    print('Expected Output: jgnnq')
+    print('Actual Output:', plaintext.get_message_text_encrypted())
+    #Example test case (CiphertextMessage)
+    ciphertext = CiphertextMessage('jgnnq')
+    print('Expected Output:', (24, 'hello'))
+    print('Actual Output:', ciphertext.decrypt_message())
 
-    # TODO: WRITE YOUR TEST CASES HERE
+    #first test case(PlaintextMessage)
+    plaintext = PlaintextMessage('sense', 10)
+    print('Expected Output: coxco')
+    print('Actual Output:', plaintext.get_message_text_encrypted())
+    #first test case (CiphertextMessage)
+    ciphertext = CiphertextMessage('coxco')
+    print('Expected Output:', (16, 'sense'))
+    print('Actual Output:', ciphertext.decrypt_message())
 
+    #Second test case
+    plaintext = PlaintextMessage('Life is good', 4)
+    print('Expected Output: Pmji mw kssh')
+    print('Actual Output:', plaintext.get_message_text_encrypted())
+    #Second test case (CiphertextMessage)
+    ciphertext = CiphertextMessage('Pmji mw kssh')
+    print('Expected Output:', (22, 'Life is good'))
+    print('Actual Output:', ciphertext.decrypt_message())
     # TODO: best shift value and unencrypted story 
-cipherstory = CiphertextMessage(get_story_string())
-print(cipherstory.decrypt_message())
+    cipherstory = CiphertextMessage(get_story_string())
+    print(cipherstory.decrypt_message())
     
     

@@ -51,7 +51,7 @@ def is_word(word_list, word):
 
 ### END HELPER CODE ###
 
-WORDLIST_FILENAME = 'words.txt'
+WORDLIST_FILENAME = 'ps4-words.txt'
 
 # you may find these constants helpful
 VOWELS_LOWER = 'aeiou'
@@ -70,7 +70,9 @@ class SubMessage(object):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        self.message_text = text
+        self.valid_words = load_words(WORDLIST_FILENAME)
+
     
     def get_message_text(self):
         '''
@@ -78,7 +80,7 @@ class SubMessage(object):
         
         Returns: self.message_text
         '''
-        pass #delete this line and replace with your code here
+        return self.message_text
 
     def get_valid_words(self):
         '''
@@ -87,7 +89,7 @@ class SubMessage(object):
         
         Returns: a COPY of self.valid_words
         '''
-        pass #delete this line and replace with your code here
+        return self.valid_words[:]
                 
     def build_transpose_dict(self, vowels_permutation):
         '''
@@ -107,9 +109,16 @@ class SubMessage(object):
 
         Returns: a dictionary mapping a letter (string) to 
                  another letter (string). 
+        VOWELS_LOWER = 'aeiou'
+        VOWELS_UPPER = 'AEIOU'
         '''
-        
-        pass #delete this line and replace with your code here
+        counter = 0
+        transpose_dictionary = {}
+        for i in vowels_permutation:
+            transpose_dictionary[VOWELS_LOWER[counter]] = i
+            transpose_dictionary[VOWELS_UPPER[counter]] = i
+            counter += 1
+        return transpose_dictionary
     
     def apply_transpose(self, transpose_dict):
         '''
@@ -119,7 +128,16 @@ class SubMessage(object):
         on the dictionary
         '''
         
-        pass #delete this line and replace with your code here
+        # dictionary = SubMessage.build_transpose_dict(self,vowels_permutation)
+        text = SubMessage.get_message_text(self)
+        result = ""
+        for i in text:
+            if i in VOWELS_LOWER or i in VOWELS_UPPER:
+                result += transpose_dict[i]
+            else:
+                result += i
+        return result
+
         
 class EncryptedSubMessage(SubMessage):
     def __init__(self, text):
@@ -132,7 +150,7 @@ class EncryptedSubMessage(SubMessage):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        SubMessage.__init__(self, text)
 
     def decrypt_message(self):
         '''
@@ -152,7 +170,35 @@ class EncryptedSubMessage(SubMessage):
         
         Hint: use your function from Part 4A
         '''
-        pass #delete this line and replace with your code here
+        permutation_list = get_permutations(VOWELS_LOWER)
+        # Create number_of_english_words counter = 0
+        number_of_english_words = 0
+        # Create decrypeted variable
+        final_decrypted_message = ""
+        #
+        for s in permutation_list:
+            #counter for number of english words
+            counter = 0
+        # convert the encrypted message into a decrypted message
+        #Make permutation dictionary
+            permutation_dictionary = SubMessage.build_transpose_dict(self, s)
+            decrypted_message = SubMessage.apply_transpose(self, permutation_dictionary)
+        # split it into a list
+            message_words = decrypted_message.split(" ")
+        # loop over the list
+            for i in message_words:
+        #for every word in the list that is a word add 1 to a counter
+                if is_word(SubMessage.get_valid_words(self), i):
+                    counter += 1
+        # if the counter is greater than number_of_english_words then replace it
+                if counter > number_of_english_words:
+                    number_of_english_words = counter
+                    final_decrypted_message = decrypted_message
+        # if no good encryptions were found then return original message sent through
+        if number_of_english_words < 1:
+            final_decrypted_message = SubMessage.get_message_text(self)
+        return final_decrypted_message
+
     
 
 if __name__ == '__main__':
@@ -166,5 +212,25 @@ if __name__ == '__main__':
     print("Actual encryption:", message.apply_transpose(enc_dict))
     enc_message = EncryptedSubMessage(message.apply_transpose(enc_dict))
     print("Decrypted message:", enc_message.decrypt_message())
+
      
     #TODO: WRITE YOUR TEST CASES HERE
+    #Decryption test cases
+    message = SubMessage("You are amazing!")
+    permutation = "aieuo"
+    enc_dict = message.build_transpose_dict(permutation)
+    print("Original message:", message.get_message_text(), "Permutation:", permutation)
+    print("Expected encryption:", "Yuo ari amazeng!")
+    print("Actual encryption:", message.apply_transpose(enc_dict))
+    enc_message = EncryptedSubMessage(message.apply_transpose(enc_dict))
+    print("Decrypted message:", enc_message.decrypt_message())
+
+    #Decryption test case if no english words inputed
+    message = SubMessage("Yillie!")
+    permutation = "aieuo"
+    enc_dict = message.build_transpose_dict(permutation)
+    print("Original message:", message.get_message_text(), "Permutation:", permutation)
+    print("Expected encryption:", "Yellei!")
+    print("Actual encryption:", message.apply_transpose(enc_dict))
+    enc_message = EncryptedSubMessage(message.apply_transpose(enc_dict))
+    print("Decrypted message:", enc_message.decrypt_message())
