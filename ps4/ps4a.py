@@ -47,7 +47,7 @@ def get_permutations(sequence):
 
 if __name__ == '__main__':
    #EXAMPLE
-   example_input = 'abc'
+   example_input = 'abcd'
    print('Input:', example_input)
    print('Expected Output:', ['abc', 'acb', 'bac', 'bca', 'cab', 'cba'])
    print('Actual Output:', get_permutations(example_input))
